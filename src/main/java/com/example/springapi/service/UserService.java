@@ -1,8 +1,11 @@
 package com.example.springapi.service;
 
 import com.example.springapi.api.model.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
@@ -10,6 +13,7 @@ import java.util.Optional;
 @Service
 public class UserService {
     private ArrayList<User> userList;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public UserService() {
         this.userList = new ArrayList<>();
@@ -33,6 +37,31 @@ public class UserService {
         }
 
         return optional;
+    }
+
+    public ArrayList<User> getAllUsers() {
+        return userList;
+    }
+
+    public User createUser(User userForm) {
+        int newUserId = 0;
+        System.out.println("User Form: " + userForm);
+
+        for (User user : userList) {
+            if (newUserId == user.getId()) {
+                newUserId++;
+            }
+        }
+
+        User newUser = new User();
+        newUser.setId(newUserId);
+        newUser.setName(userForm.getName());
+        newUser.setEmail(userForm.getEmail());
+        newUser.setAge(userForm.getAge());
+
+        userList.add(newUser);
+
+        return newUser;
     }
 
 }
